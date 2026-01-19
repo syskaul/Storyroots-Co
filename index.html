@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Our Waitlist - Storyroots & Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'garamond': ['"EB Garamond"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+</head>
+<body class="min-h-screen bg-stone-100 flex items-center justify-center p-5 font-garamond bg-cover bg-center bg-no-repeat" style="background-image: url('https://github.com/syskaul/Storyroots-Co/blob/main/BG-People.png?raw=true');">
+    <div class="rounded-2xl shadow-xl p-8 max-w-md w-full border border-stone-200" style="background-color: #EEEBE8;">
+        <div class="flex justify-center mb-6">
+            <img src="https://github.com/syskaul/Storyroots-Co/blob/main/Display.png?raw=true" alt="Storyroots & Co." class="w-48 h-auto">
+        </div>
+        
+        <h2 class="text-2xl font-semibold text-stone-800 mb-3 text-center">Join Our Waitlist</h2>
+        <p class="text-stone-600 text-center mb-8">Join the waitlist to be first in line for new Storyroot & Co. launches, small‑batch blends, and members‑only recipes, stories, and rewards</p>
+        
+        <form id="waitlistForm" class="space-y-6">
+            <div>
+                <label for="email" class="block mb-1 text-stone-700 font-medium">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    placeholder="you@example.com"
+                    class="w-full px-4 py-3 border-2 border-stone-200 rounded-xl focus:border-stone-900 focus:outline-none transition-colors text-base"
+                >
+            </div>
+            
+            <div>
+                <label for="phone" class="block mb-1 text-stone-700 font-medium">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    required 
+                    placeholder="+91 5551234567"
+                    class="w-full px-4 py-3 border-2 border-stone-200 rounded-xl focus:border-stone-900 focus:outline-none transition-colors text-base"
+                >
+            </div>
+            
+            <button 
+                type="submit" 
+                id="submitBtn"
+                class="w-full bg-stone-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-stone-800 hover:shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+            >
+                Join Waitlist
+            </button>
+        </form>
+        
+        <div id="message" class="mt-5 p-4 rounded-xl text-center hidden"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('waitlistForm');
+        const messageDiv = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Replace this URL with your Google Apps Script Web App URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXw--cf9VtbXq4N3N0UzxcHJ1HlV-CXkJN4OT1xuVBfFZeR0pcpCpLK4epVh1Dm4KI/exec';
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        phone: phone,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                // Since we're using no-cors, we can't read the response
+                // Assume success if no error was thrown
+                showMessage('success', 'Thank you! You\'ve been added to our waitlist.');
+                form.reset();
+                
+            } catch (error) {
+                showMessage('error', 'Oops! Something went wrong. Please try again.');
+                console.error('Error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join Waitlist';
+            }
+        });
+        
+        function showMessage(type, text) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'mt-5 p-4 rounded-xl text-center block';
+            
+            if (type === 'success') {
+                messageDiv.classList.add('bg-green-100', 'text-green-800', 'border', 'border-green-200');
+            } else {
+                messageDiv.classList.add('bg-red-100', 'text-red-800', 'border', 'border-red-200');
+            }
+            
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
